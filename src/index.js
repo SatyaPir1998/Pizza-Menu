@@ -2,50 +2,50 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-// const pizzaData = [
-//   {
-//     name: "Focaccia",
-//     ingredients: "Bread with italian olive oil and rosemary",
-//     price: 6,
-//     photoName: "pizzas/focaccia.jpg",
-//     soldOut: false,
-//   },
-//   {
-//     name: "Pizza Margherita",
-//     ingredients: "Tomato and mozarella",
-//     price: 10,
-//     photoName: "pizzas/margherita.jpg",
-//     soldOut: false,
-//   },
-//   {
-//     name: "Pizza Spinaci",
-//     ingredients: "Tomato, mozarella, spinach, and ricotta cheese",
-//     price: 12,
-//     photoName: "pizzas/spinaci.jpg",
-//     soldOut: false,
-//   },
-//   {
-//     name: "Pizza Funghi",
-//     ingredients: "Tomato, mozarella, mushrooms, and onion",
-//     price: 12,
-//     photoName: "pizzas/funghi.jpg",
-//     soldOut: false,
-//   },
-//   {
-//     name: "Pizza Salamino",
-//     ingredients: "Tomato, mozarella, and pepperoni",
-//     price: 15,
-//     photoName: "pizzas/salamino.jpg",
-//     soldOut: true,
-//   },
-//   {
-//     name: "Pizza Prosciutto",
-//     ingredients: "Tomato, mozarella, ham, aragula, and burrata cheese",
-//     price: 18,
-//     photoName: "pizzas/prosciutto.jpg",
-//     soldOut: false,
-//   },
-// ];
+const pizzaData = [
+  {
+    name: "Focaccia",
+    ingredients: "Bread with italian olive oil and rosemary",
+    price: 6,
+    photoName: "pizzas/focaccia.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Margherita",
+    ingredients: "Tomato and mozarella",
+    price: 10,
+    photoName: "pizzas/margherita.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Spinaci",
+    ingredients: "Tomato, mozarella, spinach, and ricotta cheese",
+    price: 12,
+    photoName: "pizzas/spinaci.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Funghi",
+    ingredients: "Tomato, mozarella, mushrooms, and onion",
+    price: 12,
+    photoName: "pizzas/funghi.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Salamino",
+    ingredients: "Tomato, mozarella, and pepperoni",
+    price: 15,
+    photoName: "pizzas/salamino.jpg",
+    soldOut: true,
+  },
+  {
+    name: "Pizza Prosciutto",
+    ingredients: "Tomato, mozarella, ham, aragula, and burrata cheese",
+    price: 18,
+    photoName: "pizzas/prosciutto.jpg",
+    soldOut: false,
+  },
+];
 
 function App() {
   return (
@@ -67,56 +67,77 @@ function Header() {
   );
 }
 
-function Pizza(props) {
+function Pizza({ pizzaObj }) {
+  // if (pizzaObj.soldOut) return null; // if sold out, return null
+
   return (
-    <div className="pizza">
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name}></img>
       <div>
-        <img src={props.photoName} alt={props.name}></img>
-        <h3> {props.name}</h3>
-        <p>{props.ingredients}</p>
-        <span>{props.price + 3}</span>
+        <h3> {pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.soldOut ? "SOLD OUT" : pizzaObj.price}</span>
       </div>
-    </div>
+    </li>
   );
 }
 
 function Menu() {
+  const pizzas = pizzaData;
+  const noOfpizzas = pizzas.length;
   return (
     <main className="menu">
       <h2>Our Menue</h2>
-      <Pizza
-        name="pizza spanachi"
-        ingredients=" Tomato, mozarella, ham, aragula, and burrata cheese"
-        photoName="pizzas\spinaci.jpg"
-        price={10}
-      />
-      <Pizza
-        name="Pizza Salamino"
-        ingredients="Tomato, mozarella, and pepperoni"
-        photoName="pizzas\Salamino.jpg"
-        price={12}
-      />
-      <Pizza
-        name="Pizza Prosciutto"
-        ingredients="Tomato, mozarella, ham, aragula, and burrata cheese"
-        photoName="pizzas\Prosciutto.jpg"
-        price={13}
-      />
+
+      {noOfpizzas > 0 ? (
+        <>
+          <p>
+            {" "}
+            Authentic Italian cuisine , 6 creative dishes chose from . All are
+            from the wood fired oven, all organic and home made and all made
+            with love.
+          </p>
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => (
+              <Pizza pizzaObj={pizza} key={pizza.name} /> // pass pizza object to Pizza component
+            ))}
+          </ul>
+        </>
+      ) : null}
     </main>
   );
 }
 
 function Footer() {
   const hour = new Date().getHours();
-  const openHour = 8;
-  const closeHour = 22;
-  const isoOpen = hour >= openHour && hour <= closeHour;
-  console.log(isoOpen);
-  //   if (hour >= openHour && hour <= closeHour) alert("We are curently open");
-  //   else alert("The shop is close ");
+  // const style = { color: "Green" };
+  const openHour = 6;
+  const closeHour = 20;
+  const isOpen = hour >= openHour && hour <= closeHour;
 
-  return <footer className="footer">We are currently open!</footer>;
+  console.log(isOpen);
+
+  return (
+    <footer className="footer">
+      {isOpen ? (
+        <Order closeHour={closeHour} openHour={openHour} />
+      ) : (
+        <p>
+          We are happy to wellcome you between {openHour}:00 and {closeHour}:00
+        </p>
+      )}
+    </footer>
+  );
   //   return React.createElement("footer", null, "We are currently open!");
+}
+
+function Order({ openHour, closeHour }) {
+  return (
+    <div className="order">
+      <p>The shop was open until {closeHour}:00 !</p>
+      <button className="btn">Order Now</button>
+    </div>
+  );
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

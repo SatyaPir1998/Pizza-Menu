@@ -155,6 +155,10 @@ body {
   font-size: 1.4rem;
 }
 
+.footer p {
+  color: red;
+}
+
 .order {
   display: flex;
   flex-direction: column;
